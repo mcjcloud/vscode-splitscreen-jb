@@ -6,18 +6,9 @@ import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.fileEditor.impl.EditorWindow
 import com.intellij.openapi.fileEditor.impl.FileEditorManagerImpl
 import com.intellij.openapi.fileEditor.impl.FileEditorOpenOptions
+import javax.swing.SwingUtilities
 
 class SplitLeftAction : AnAction() {
-//    override fun actionPerformed(e: AnActionEvent) {
-//        val editor: FileEditorManagerImpl = FileEditorManager.getInstance(e.project!!) as FileEditorManagerImpl
-//        val currentWindow = editor.currentWindow
-//        val prevWindow = currentWindow.adjacentEditors[EditorWindow.RelativePosition.LEFT] ?: return
-//
-//        val file = editor.currentFile!!
-//
-//        currentWindow.closeFile(file)
-//        editor.openFileImpl2(prevWindow, file, true)
-//    }
     override fun actionPerformed(e: AnActionEvent) {
         val editor: FileEditorManagerImpl = FileEditorManager.getInstance(e.project!!) as FileEditorManagerImpl
         val currentWindow = editor.currentWindow
@@ -32,6 +23,10 @@ class SplitLeftAction : AnAction() {
 
         currentWindow?.closeFile(file)
         editor.openFile(file, prevWindow, FileEditorOpenOptions().withRequestFocus(true))
-        prevWindow?.requestFocus(true)
+
+        SwingUtilities.invokeLater {
+            prevWindow?.requestFocus(true)
+            prevWindow?.setAsCurrentWindow(true)
+        }
     }
 }
